@@ -1,14 +1,17 @@
 <script>
+    import { onMount } from "svelte";
+    import { tags } from "$lib";
     import { tagCurrent } from "$lib/tag.svelte.js";
+    import { stocksData } from "$lib/data.svelte.js";
     import PageHead from "$lib/uicomponents/PageHead.svelte";
-
+    import Question from "$lib/uicomponents/Question.svelte";
+    // import ExpensiveTransition from "$lib/scenariocomponents/ExpensiveTransition.svelte";
+    import GeoOnCanvas from "$lib/scenariocomponents/GeoOnCanvas.svelte";
+    import NoFullRedraws from "$lib/scenariocomponents/NoFullRedraws.svelte";
+    import DrawToCanvas from "$lib/scenariocomponents/DrawToCanvas.svelte";
+    import ResponsiveScales from "$lib/scenariocomponents/ResponsiveScales.svelte";
     import SyncedDataset1 from "$lib/scenariocomponents/SyncedDataset1.svelte";
     import SyncedDataset2 from "$lib/scenariocomponents/SyncedDataset2.svelte";
-    // import ExpensiveTransition from "$lib/scenariocomponents/ExpensiveTransition.svelte";
-    import Question from "$lib/uicomponents/Question.svelte";
-    import { tags } from "$lib";
-    import { onMount } from "svelte";
-    import { stocksData } from "$lib/data.svelte.js";
 
     let { data } = $props();
 
@@ -82,9 +85,7 @@
         >. Here is a simple example with circles
     </p>
     <!--Illustrative component-->
-    {#await import("$lib/scenariocomponents/ResponsiveScales.svelte") then ResponsiveScales}
-        <ResponsiveScales />
-    {/await}
+    <ResponsiveScales />
 {/snippet}
 <Question q={q5} a={a5} qtags={[tags.svelte, tags.d3]} />
 
@@ -111,6 +112,66 @@
     </p>
 {/snippet}
 <Question q={q6} a={a6} qtags={[tags.svelte, tags.d3]} />
+
+<!---->
+{#snippet q12()}
+    <h2>
+        How do I handle reactive data updates in a Svelte component that renders
+        a D3 chart without causing full redraws?
+    </h2>
+{/snippet}
+{#snippet a12()}
+    <p>
+        We can only redraw the data we need to update. D3's lifecycle pattern
+        consists of <em>enter</em>, <em>update</em> and
+        <em>exit</em>. So when we update the data we can use Svelte's
+        <code>$effect</code> rune and update the data that is different. In D3
+        we use something like
+        <code>{"d3.select(...).data(...).join()..."}</code>.
+    </p>
+
+    <NoFullRedraws />
+
+    <p class="pt-2">
+        In this example we count the number of <code>{"enter => {...}"}</code>
+        actions performed, as well as the number of
+        <code>{"update => {...}"}</code> actions that a single
+        <code>{"$effect"}</code>-trigger performs. Like this we can proof that
+        it's not redrawing the chart, but updates, depending on the data, which
+        is in turn a <code>$state</code>, so the reactive behaviour is
+        triggered. If you wonder why it's incrementing by 8, this is because the
+        update actions for both height and width are counted. A full redraw
+        would include 16 actions per trigger, namely for <code>x</code>,
+        <code>y</code>,
+        <code>width</code>, <code>height</code>.
+    </p>
+{/snippet}
+<Question q={q12} a={a12} qtags={[tags.svelte, tags.d3]} />
+
+<!---->
+{#snippet q9()}
+    <h2>
+        What is your approach to server-side rendering or prerendering in a
+        data-heavy Svelte app (e.g., for SEO or fast first paint)?
+    </h2>
+{/snippet}
+{#snippet a9()}
+    <p>
+        With server-side rendering we prepare the data on the server and deliver
+        a full html page at best, which is always good for SEO. But when this
+        delays a fast first paint we need to deliver the SEO relevant data and
+        move data fetching in SvelteKit to a <code>+page.js</code>. This will
+        cause the client to load the data. The first pains is fast, but causes
+        the client to load the data.
+    </p>
+    <p>
+        In terms of SEO I <em>think</em> it's a good idea to have all the textual,
+        preview image and other metadata relevant to the article at hand as fast
+        as possible. I'm not an SEO expert to be honest and really should think more
+        about this.
+    </p>
+{/snippet}
+<Question q={q9} a={a9} qtags={[tags.svelte]} />
 
 <!---->
 {#snippet q14()}
@@ -143,31 +204,6 @@
 <Question q={q14} a={a14} qtags={[tags.svelte, tags.vis]} />
 
 <!---->
-{#snippet q9()}
-    <h2>
-        What is your approach to server-side rendering or prerendering in a
-        data-heavy Svelte app (e.g., for SEO or fast first paint)?
-    </h2>
-{/snippet}
-{#snippet a9()}
-    <p>
-        With server-side rendering we prepare the data on the server and deliver
-        a full html page at best, which is always good for SEO. But when this
-        delays a fast first paint we need to deliver the SEO relevant data and
-        move data fetching in SvelteKit to a <code>+page.js</code>. This will
-        cause the client to load the data. The first pains is fast, but causes
-        the client to load the data.
-    </p>
-    <p>
-        In terms of SEO I <em>think</em> it's a good idea to have all the textual,
-        preview image and other metadata relevant to the article at hand as fast
-        as possible. I'm not an SEO expert to be honest and really should think more
-        about this.
-    </p>
-{/snippet}
-<Question q={q9} a={a9} qtags={[tags.svelte]} />
-
-<!---->
 {#snippet q8()}
     <h2>
         What can I when to many elements are created in the svg and it lags
@@ -188,9 +224,7 @@
         handle this with the data we haves.
     </p>
     <!--Illustrative component -->
-    {#await import("$lib/scenariocomponents/DrawToCanvas.svelte") then DrawToCanvas}
-        <DrawToCanvas />
-    {/await}
+    <DrawToCanvas />
 {/snippet}
 <Question q={q8} a={a8} qtags={[tags.d3, tags.perf]} />
 
@@ -231,48 +265,9 @@
     </p>
     <!--Illustrative component -->
 
-    {#await import("$lib/scenariocomponents/GeoOnCanvas.svelte") then GeoOnCanvas}
-        <GeoOnCanvas land={data.land} />
-    {/await}
+    <GeoOnCanvas land={data.land} />
 {/snippet}
 <Question q={q10} a={a10} qtags={[tags.d3, tags.vis]} />
-
-<!---->
-{#snippet q12()}
-    <h2>
-        How do I handle reactive data updates in a Svelte component that renders
-        a D3 chart without causing full redraws?
-    </h2>
-{/snippet}
-{#snippet a12()}
-    <p>
-        We can only redraw the data we need to update. D3's lifecycle pattern
-        consists of <em>enter</em>, <em>update</em> and
-        <em>exit</em>. So when we update the data we can use Svelte's
-        <code>$effect</code> rune and update the data that is different. In D3
-        we use something like
-        <code>{"d3.select(...).data(...).join()..."}</code>.
-    </p>
-
-    {#await import("$lib/scenariocomponents/NoFullRedraws.svelte") then NoFullRedraws}
-        <NoFullRedraws />
-    {/await}
-
-    <p class="pt-2">
-        In this example we count the number of <code>{"enter => {...}"}</code>
-        actions performed, as well as the number of
-        <code>{"update => {...}"}</code> actions that a single
-        <code>{"$effect"}</code>-trigger performs. Like this we can proof that
-        it's not redrawing the chart, but updates, depending on the data, which
-        is in turn a <code>$state</code>, so the reactive behaviour is
-        triggered. If you wonder why it's incrementing by 8, this is because the
-        update actions for both height and width are counted. A full redraw
-        would include 16 actions per trigger, namely for <code>x</code>,
-        <code>y</code>,
-        <code>width</code>, <code>height</code>.
-    </p>
-{/snippet}
-<Question q={q12} a={a12} qtags={[tags.svelte, tags.d3]} />
 
 <!---->
 {#snippet q13()}
