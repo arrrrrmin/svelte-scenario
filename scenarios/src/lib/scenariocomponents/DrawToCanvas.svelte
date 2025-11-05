@@ -119,8 +119,11 @@
     R scale: <code>{radius.toFixed(4)}</code>
 </p>
 <Resizer bind:width>
-    <div bind:this={container} class="px-2 @container relative">
-        <canvas bind:this={canvas} class="block rounded-lg"></canvas>
+    <div
+        bind:this={container}
+        class="px-0 sm:px-2 @container relative overflow-auto rounded-md bg-white"
+    >
+        <canvas bind:this={canvas} class="block rounded-md"></canvas>
         <div
             bind:this={tooltip}
             class="absolute bg-white text-sm px-2 py-1 rounded border shadow pointer-events-none"

@@ -19,6 +19,8 @@
     }
 
     function onResize(e) {
+        e.stopPropagation();
+        e.preventDefault();
         if (!resizing) return;
         const clampWidth = d3
             .select("div#main-container")
@@ -53,7 +55,7 @@
             <div
                 bind:this={dragger}
                 title="Drag to resize"
-                class="pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40"
+                class="hidden sm:flex pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40"
                 draggable="false"
                 onpointerdown={startResize}
             ></div>

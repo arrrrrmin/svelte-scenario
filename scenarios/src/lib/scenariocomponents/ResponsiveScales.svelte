@@ -135,7 +135,7 @@
 <Resizer bind:width>
     <div
         bind:this={container}
-        class="pb-2 @container relative overflow-auto rounded-lg bg-white outline outline-white/5 group-data-dragging:before:absolute group-data-dragging:before:inset-0"
+        class="pb-2 @container relative overflow-auto rounded-md bg-white"
     >
         <div class="pt-2" id="responsive-scales"></div>
     </div>
