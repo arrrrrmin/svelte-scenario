@@ -2,18 +2,13 @@
     import { tagCurrent } from "$lib/tag.svelte.js";
     import PageHead from "$lib/uicomponents/PageHead.svelte";
 
-    import DrawToCanvas from "$lib/scenariocomponents/DrawToCanvas.svelte";
-    import ExpensiveTransition from "$lib/scenariocomponents/ExpensiveTransition.svelte";
-    import FailingComponent from "$lib/scenariocomponents/FailingComponent.svelte";
-    import GeoOnCanvas from "$lib/scenariocomponents/GeoOnCanvas.svelte";
-    import ResponsiveScales from "$lib/scenariocomponents/ResponsiveScales.svelte";
-    import Question from "$lib/uicomponents/Question.svelte";
-    import { tags } from "$lib";
     import SyncedDataset1 from "$lib/scenariocomponents/SyncedDataset1.svelte";
     import SyncedDataset2 from "$lib/scenariocomponents/SyncedDataset2.svelte";
+    // import ExpensiveTransition from "$lib/scenariocomponents/ExpensiveTransition.svelte";
+    import Question from "$lib/uicomponents/Question.svelte";
+    import { tags } from "$lib";
     import { onMount } from "svelte";
     import { stocksData } from "$lib/data.svelte.js";
-    import NoFullRedraws from "$lib/scenariocomponents/NoFullRedraws.svelte";
 
     let { data } = $props();
 
@@ -87,7 +82,9 @@
         >. Here is a simple example with circles
     </p>
     <!--Illustrative component-->
-    <ResponsiveScales />
+    {#await import("$lib/scenariocomponents/ResponsiveScales.svelte") then ResponsiveScales}
+        <ResponsiveScales />
+    {/await}
 {/snippet}
 <Question q={q5} a={a5} qtags={[tags.svelte, tags.d3]} />
 
@@ -171,6 +168,33 @@
 <Question q={q9} a={a9} qtags={[tags.svelte]} />
 
 <!---->
+{#snippet q8()}
+    <h2>
+        What can I when to many elements are created in the svg and it lags
+        heavily in transitions?
+    </h2>
+{/snippet}
+{#snippet a8()}
+    <p>
+        Debugging sure. See what I can do in the D3 transition department. Maybe
+        we have unnessecary update. BUt when the lags persist there are may be
+        to many elements and one has to draw to <code
+            >{"<canvas></canvas>"}</code
+        >. But this also has a draw back: Unlike SVG, canvas does not track
+        elements, since there are no elements like <code>{"<rect>"}</code>
+        or <code>{"<g>"}</code>. So we need to redraw everything, should the
+        data change. But it does not mean we have no interactions. We can build
+        hit tests to see which part of the canvas is beeing interacted with and
+        handle this with the data we haves.
+    </p>
+    <!--Illustrative component -->
+    {#await import("$lib/scenariocomponents/DrawToCanvas.svelte") then DrawToCanvas}
+        <DrawToCanvas />
+    {/await}
+{/snippet}
+<Question q={q8} a={a8} qtags={[tags.d3, tags.perf]} />
+
+<!---->
 {#snippet q10()}
     <h2>
         How would I integrate geographic data (TopoJSON) and control zoom/pan
@@ -206,7 +230,10 @@
         maps on a canvas:
     </p>
     <!--Illustrative component -->
-    <GeoOnCanvas land={data.land} />
+
+    {#await import("$lib/scenariocomponents/GeoOnCanvas.svelte") then GeoOnCanvas}
+        <GeoOnCanvas land={data.land} />
+    {/await}
 {/snippet}
 <Question q={q10} a={a10} qtags={[tags.d3, tags.vis]} />
 
@@ -226,7 +253,11 @@
         we use something like
         <code>{"d3.select(...).data(...).join()..."}</code>.
     </p>
-    <NoFullRedraws />
+
+    {#await import("$lib/scenariocomponents/NoFullRedraws.svelte") then NoFullRedraws}
+        <NoFullRedraws />
+    {/await}
+
     <p class="pt-2">
         In this example we count the number of <code>{"enter => {...}"}</code>
         actions performed, as well as the number of

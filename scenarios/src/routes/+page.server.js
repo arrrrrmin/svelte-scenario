@@ -1,4 +1,3 @@
-import { flareData } from '$lib/data.svelte';
 import { loadLand110mJson, loadExampleStocks } from '$lib/loaders';
 
 export const prerender = true;
