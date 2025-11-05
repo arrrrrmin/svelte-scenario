@@ -1,7 +1,8 @@
 <script>
-    import { onMount } from "svelte";
     import * as d3 from "d3";
+    import { onMount } from "svelte";
     import { defaultTransition } from "$lib";
+    import Resizer from "$lib/uicomponents/Resizer.svelte";
 
     let width = $state(undefined);
     let height = 400;
@@ -124,43 +125,6 @@
     $effect(() => {
         update();
     });
-
-    let resizing = false;
-    let startX;
-    let startWidth;
-
-    function startResize(e) {
-        resizing = true;
-        startX = e.clientX;
-        startWidth = width;
-        window.addEventListener("pointermove", onResize);
-        window.addEventListener("pointerup", stopResize);
-    }
-
-    function onResize(e) {
-        if (!resizing) return;
-        const clampWidth = d3
-            .select("div#main-container")
-            .node()
-            .getBoundingClientRect().width;
-
-        let translateX = e.layerX < clampWidth ? clampWidth - e.layerX : 0;
-        if (translateX > clampWidth - 320) {
-            translateX = clampWidth - 320;
-        }
-        d3.select(container).attr("style", `margin-right: ${translateX}px`);
-        d3.select("div#dragger").attr(
-            "style",
-            `transform: translateX(${-translateX}px); -webkit-user-select: none; touch-action: pan-y;`,
-        );
-        width = Math.max(320, Math.min(e.layerX, clampWidth));
-    }
-
-    function stopResize() {
-        resizing = false;
-        window.removeEventListener("pointermove", onResize);
-        window.removeEventListener("pointerup", stopResize);
-    }
 </script>
 
 <p>
@@ -168,24 +132,11 @@
     R Scale: <code>{currentR}</code>
 </p>
 
-<div id="main-container" class="bg-gray-200 rounded-lg p-1 select-none">
-    <div class="group not-prose relative overflow-hidden">
-        <div
-            bind:this={container}
-            class="pb-2 @container relative overflow-auto rounded-lg bg-white outline outline-white/5 dark:bg-gray-950/50 dark:inset-ring dark:inset-ring-white/5 group-data-dragging:before:absolute group-data-dragging:before:inset-0"
-        >
-            <div class="pt-2" id="responsive-scales"></div>
-        </div>
-        <div
-            class="pointer-events-none absolute inset-y-0 right-1.5 left-60 max-sm:hidden"
-        >
-            <div
-                id="dragger"
-                title="Drag to resize"
-                class="pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40 dark:bg-slate-500 dark:group-data-dragging:bg-slate-300 dark:hover:bg-slate-300"
-                draggable="false"
-                onpointerdown={startResize}
-            ></div>
-        </div>
+<Resizer bind:width>
+    <div
+        bind:this={container}
+        class="pb-2 @container relative overflow-auto rounded-lg bg-white outline outline-white/5 group-data-dragging:before:absolute group-data-dragging:before:inset-0"
+    >
+        <div class="pt-2" id="responsive-scales"></div>
     </div>
-</div>
+</Resizer>
