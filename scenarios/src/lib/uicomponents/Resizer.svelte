@@ -43,18 +43,16 @@
     }
 </script>
 
-<div id="main-container" class="bg-gray-200 rounded-lg p-1 select-none">
+<div id="main-container" class="bg-gray-200 rounded-md p-1 select-none">
     <div class="group not-prose relative overflow-hidden">
-        <div bind:this={container} class="bg-white">
+        <div bind:this={container} class="bg-white rounded-md">
             {@render children()}
         </div>
-        <div
-            class="pointer-events-none absolute inset-y-0 right-1.5 left-60 max-sm:hidden"
-        >
+        <div class="pointer-events-none absolute inset-y-0 right-1.5 left-60">
             <div
                 id="dragger"
                 title="Drag to resize"
-                class="pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40 dark:bg-slate-500 dark:group-data-dragging:bg-slate-300 dark:hover:bg-slate-300"
+                class="pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40"
                 draggable="false"
                 onpointerdown={startResize}
             ></div>
