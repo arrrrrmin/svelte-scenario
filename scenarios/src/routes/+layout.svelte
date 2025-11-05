@@ -7,7 +7,7 @@
 
 <Head />
 <main
-    class="mx-auto pb-8 px-12 max-w-4xl lg:border-x lg:border-dashed lg:border-gray-300"
+    class="mx-auto pb-8 px-2 md:px-12 max-w-4xl lg:border-x lg:border-dashed lg:border-gray-300"
 >
     {@render children()}
 </main>
