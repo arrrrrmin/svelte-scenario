@@ -4,6 +4,7 @@
     let { children, width = $bindable() } = $props();
 
     let container;
+    let dragger;
     let resizing = false;
     let startX;
     let startWidth;
@@ -29,7 +30,7 @@
             translateX = clampWidth - minWidth;
         }
         d3.select(container).attr("style", `margin-right: ${translateX}px`);
-        d3.select("div#dragger").attr(
+        d3.select(dragger).attr(
             "style",
             `transform: translateX(${-translateX}px); -webkit-user-select: none; touch-action: pan-y;`,
         );
@@ -48,9 +49,9 @@
         <div bind:this={container} class="bg-white rounded-md">
             {@render children()}
         </div>
-        <div class="pointer-events-none absolute inset-y-0 right-1.5 left-60">
+        <div class="pointer-events-none absolute inset-y-0 right-1 left-60">
             <div
-                id="dragger"
+                bind:this={dragger}
                 title="Drag to resize"
                 class="pointer-events-auto absolute top-1/2 right-1 z-50 -mt-6 h-12 w-1.5 cursor-ew-resize rounded-full bg-slate-950/20 group-data-dragging:bg-slate-950/40 hover:bg-slate-950/40"
                 draggable="false"
