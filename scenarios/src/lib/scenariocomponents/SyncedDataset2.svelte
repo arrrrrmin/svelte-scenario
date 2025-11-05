@@ -30,9 +30,9 @@
 
     onMount(() => {
         if (stocksData.data) {
-            console.log("Data arrived");
+            // console.log("Data arrived");
         } else {
-            console.log("Data absent");
+            // console.log("Data absent");
         }
     });
 

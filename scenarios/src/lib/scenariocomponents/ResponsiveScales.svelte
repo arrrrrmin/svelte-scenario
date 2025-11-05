@@ -138,7 +138,6 @@
     }
 
     function onResize(e) {
-        console.log(e);
         if (!resizing) return;
         const clampWidth = d3
             .select("div#main-container")
@@ -154,7 +153,6 @@
             "style",
             `transform: translateX(${-translateX}px); -webkit-user-select: none; touch-action: pan-y;`,
         );
-        console.log(e.layerX);
         width = Math.max(320, Math.min(e.layerX, clampWidth));
     }
 

@@ -1,5 +1,5 @@
 export const config = {
-    domain: "https://svelte-scenarios.arrrrrmin.dev",
+    domain: "svelte-scenarios.arrrrrmin.dev",
     title: "Svelte scenarios",
     description: "A site to intensively learn about challenging scenarios in Svelte + D3js, by taking them apart.",
     preview: "",

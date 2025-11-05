@@ -19,24 +19,9 @@
 
     let syncedHover = $state(undefined);
 
-    function typed(d, company) {
-        return {
-            ...d,
-            company: company,
-            Date: new Date(`${d.Date}T00:00:00Z`),
-            Close: parseFloat(d.Close),
-        };
-    }
-
     onMount(() => {
         if (data.stocks) {
-            stocksData.data = new Array().concat(
-                data.stocks.appl.map((d) => typed(d, "APPL")),
-                data.stocks.amzn.map((d) => typed(d, "AMZN")),
-                data.stocks.goog.map((d) => typed(d, "GOOG")),
-                data.stocks.ibm.map((d) => typed(d, "IBM")),
-                data.stocks.msft.map((d) => typed(d, "MSFT")),
-            );
+            stocksData.data = data.stocks;
         }
     });
 
@@ -129,6 +114,36 @@
     </p>
 {/snippet}
 <Question q={q6} a={a6} qtags={[tags.svelte, tags.d3]} />
+
+<!---->
+{#snippet q14()}
+    <h2>
+        How would I design multiple charts, that depend on the same dataset?
+    </h2>
+{/snippet}
+{#snippet a14()}
+    <p>
+        Depending on the same dataset, means we can store the data in a state. I
+        want to approach it from a SSR view. We can load it in a <code
+            >+page.server.js</code
+        >
+        file. We most likely await the data with some fetch function. After we receive
+        the data, we can forward the data to a <code>{"$state()"}</code> and
+        import it as we need it in different vis components. The svelte docs
+        refer to this behaviour explicitly in their section about
+        <a
+            href="https://svelte.dev/docs/svelte/stores#When-to-use-stores"
+            target="_blank">stores</a
+        >. Like this we can seperate the components from each other, while
+        keeping them in sync. When the dataset becomes larger we need to think
+        about caching strategies like
+        <code>IndexDB</code> or something else. But it's not in scope of this question.
+    </p>
+    <!--Illstrative component-->
+    <SyncedDataset1 bind:syncedHover />
+    <SyncedDataset2 bind:syncedHover />
+{/snippet}
+<Question q={q14} a={a14} qtags={[tags.svelte, tags.vis]} />
 
 <!---->
 {#snippet q9()}
@@ -243,36 +258,6 @@
     </p>
 {/snippet}
 <Question q={q13} a={a13} qtags={[tags.comp]} />
-
-<!---->
-{#snippet q14()}
-    <h2>
-        How would I design multiple charts, that depend on the same dataset?
-    </h2>
-{/snippet}
-{#snippet a14()}
-    <p>
-        Depending on the same dataset, means we can store the data in a state. I
-        want to approach it from a SSR view. We can load it in a <code
-            >+page.server.js</code
-        >
-        file. We most likely await the data with some fetch function. After we receive
-        the data, we can forward the data to a <code>{"$state()"}</code> and
-        import it as we need it in different vis components. The svelte docs
-        refer to this behaviour explicitly in their section about
-        <a
-            href="https://svelte.dev/docs/svelte/stores#When-to-use-stores"
-            target="_blank">stores</a
-        >. Like this we can seperate the components from each other, while
-        keeping them in sync. When the dataset becomes larger we need to think
-        about caching strategies like
-        <code>IndexDB</code> or something else. But it's not in scope of this question.
-    </p>
-    <!--Illstrative component-->
-    <SyncedDataset1 bind:syncedHover />
-    <SyncedDataset2 bind:syncedHover />
-{/snippet}
-<Question q={q14} a={a14} qtags={[tags.svelte]} />
 
 <!---->
 {#snippet q15()}
